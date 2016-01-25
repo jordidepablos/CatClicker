@@ -1,0 +1,5 @@
+.catPicture > .counter, .catPicture > .name {
+	position: relative;
+	top: -140px;
+	left: 10px;
+}
