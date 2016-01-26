@@ -1,5 +1,42 @@
+section {
+    width: 75%;
+    margin: 0 auto;
+    text-align: center
+}
+
+aside {
+    float: left;
+    margin: 0 auto;
+    width: 25%;
+}
+
+footer {
+	clear: both;
+}
+
+#catsList {
+    list-style-type: none;
+    padding: 10px;
+}
+
+#catsList > li {
+    padding: 5px 10px;
+    display: block;
+    margin: 0;
+}
+
+#catsList > li:hover {
+    background-color: gray;
+    cursor: pointer;
+}
+
+
+.catPicture > img:hover {
+	cursor: pointer;
+}
+
 .catPicture > .counter, .catPicture > .name {
 	position: relative;
 	top: -140px;
-	left: 10px;
+	left: -25%;
 }

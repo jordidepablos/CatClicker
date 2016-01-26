@@ -6,90 +6,128 @@
 			img: 'poplinre.jpg'
 		},
 		{
-			name: 'chewie',
+			name: 'Chewie',
 			img: 'chewie.jpg',
+		},
+		{
+			name: 'Jetske',
+			img: 'jetske.jpg',
+		},
+		{
+			name: 'Mundabor',
+			img: 'mundabor.jpg',
+		},
+		{
+			name: 'Sweet',
+			img: 'sweet.jpg',
 		}
 	];
 
 	var Cat = function (catObj) {
+
+		var createViewerElement = function(cat) {
+			var att;
+			var el;
+			var viewerElement = document.createElement('div');
+
+			// set element id
+			att = document.createAttribute('id');
+			att.value = cat.name;
+			viewerElement.setAttributeNode(att);
+
+			// set element class
+			att = document.createAttribute('class');
+			att.value = 'catPicture';
+			viewerElement.setAttributeNode(att);
+
+			// append img child to element
+			var img = document.createElement('img');
+			att = document.createAttribute('src');
+			att.value = 'img/' + cat.img;
+			img.setAttributeNode(att);
+
+			viewerElement.appendChild(img);
+
+			// append cats name
+			var name = document.createElement('div');
+			att = document.createAttribute('class');
+			att.value = 'name';
+			name.setAttributeNode(att);
+
+			el = document.createElement('h1');
+			el.appendChild(document.createTextNode(cat.name));
+
+			name.appendChild(el);
+
+			viewerElement.appendChild(name);
+
+			// append cats counter
+			var counter = document.createElement('div');
+			att = document.createAttribute('class');
+			att.value = 'counter';
+			counter.setAttributeNode(att);
+
+			el = document.createElement('h1');
+			
+			cat.counterElement = document.createElement('span');
+			att = document.createAttribute('id');
+			att.value = cat.name + '_clickCounter'
+			cat.counterElement.setAttributeNode(att);
+			cat.counterElement.appendChild(document.createTextNode(cat.counterValue));
+
+
+			el.appendChild(cat.counterElement);
+			el.appendChild(document.createTextNode(' Clicks'));
+
+			counter.appendChild(el);
+
+			// add element listener
+			viewerElement.addEventListener('click', (function(cat) {
+				return function() {
+					cat.counterValue ++;
+					cat.counterElement.innerText = cat.counterValue;
+				};
+			})(cat), false);
+
+			viewerElement.appendChild(counter);
+
+			return viewerElement;
+		};
+
+		var createListElement = function(cat) {
+			var listElement = document.createElement('li');
+			listElement.appendChild(document.createTextNode(cat.name));
+			listElement.addEventListener('click', (function(cat) {
+				return function() {
+					cat.show();
+				};
+			})(cat), false);
+
+			return listElement;
+		};
+
+
 		this.name = catObj.name;
 		this.img = catObj.img;
 		this.counterValue = 0;
-		
-		var att;
-		var el;
-
-		// create element
-		this.element = document.createElement('div');
-
-		// set element id
-		att = document.createAttribute('id');
-		att.value = this.name;
-		this.element.setAttributeNode(att);
-
-		// set element class
-		att = document.createAttribute('class');
-		att.value = 'catPicture';
-		this.element.setAttributeNode(att);
-
-		// append img child to element
-		var img = document.createElement('img');
-		att = document.createAttribute('src');
-		att.value = 'img/' + this.img;
-		img.setAttributeNode(att);
-
-		this.element.appendChild(img);
-
-		// append cats name
-		var name = document.createElement('div');
-		att = document.createAttribute('class');
-		att.value = 'name';
-		name.setAttributeNode(att);
-
-		el = document.createElement('h1');
-		el.appendChild(document.createTextNode(this.name));
-
-		name.appendChild(el);
-
-		this.element.appendChild(name);
-
-		// append cats counter
-		var counter = document.createElement('div');
-		att = document.createAttribute('class');
-		att.value = 'counter';
-		counter.setAttributeNode(att);
-
-		el = document.createElement('h1');
-		
-		this.counterElement = document.createElement('span');
-		att = document.createAttribute('id');
-		att.value = this.name + '_clickCounter'
-		this.counterElement.setAttributeNode(att);
-		this.counterElement.appendChild(document.createTextNode(this.counterValue));
-
-
-		el.appendChild(this.counterElement);
-		el.appendChild(document.createTextNode(' Clicks'));
-
-		counter.appendChild(el);
-
-		// add element listener
-		var that = this;
-		this.element.addEventListener('click', function(e) {
-			that.counterValue ++;
-			that.counterElement.innerText = that.counterValue;
-		}, false);
-
-		this.element.appendChild(counter);	
+		this.viewerElement = createViewerElement(this);
+		this.listElement = createListElement(this);
+		this.show = function() {
+			document.getElementById('catsViewer').innerHTML = "";
+			document.getElementById('catsViewer').appendChild(this.viewerElement);
+		};
 
 		return {
-			add: function() {
-				document.body.appendChild(that.element);
-			}
+			addToCatsList: (function (cat) {
+				return function() {
+					document.getElementById('catsList').appendChild(cat.listElement);
+				};
+			})(this)
 		};
 	}
 
 	cats.forEach(function (cat) {
-		new Cat(cat).add();
+		var catObj = new Cat(cat);
+		catObj.addToCatsList();
 	});
 })();
