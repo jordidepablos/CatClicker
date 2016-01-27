@@ -5,6 +5,16 @@
 	<link rel="stylesheet" href="style/style.css"/>
 </head>
 <body>
+	<script id="catsListItemTemplate" type="text/template">
+		<li>{{catName}}</li>
+	</script>
+	<script id="catsViewerTemplate" type="text/template">
+		<div class="name"><h1>{{catName}}</h1></div>
+		<div class="catPicture">
+			<img src="img/{{catImage}}"/>
+		</div>
+		<div class="counter"><h1><span id="counter">{{numberOfClicks}}</span> Clicks</h1></div>
+	</script>
 	<header>
 		<h1>Cat Clicker</h1>
 		<h2>Premium</h2>
@@ -20,6 +30,7 @@
 	<footer>
 		<h3>Created by <strong>Jordi de Pablos</strong></h3>
 	</footer>
+	<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 	<script src="script/catclicker.js"></script>
 </body>
 </html>

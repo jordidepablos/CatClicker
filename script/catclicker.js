@@ -1,133 +1,124 @@
 (function () {
+	var model = {
+		catsList: [
+			{
+				name: 'Poplinre',
+				img: 'poplinre.jpg',
+				counter: 0
+			},
+			{
+				name: 'Chewie',
+				img: 'chewie.jpg',
+				counter: 0
+			},
+			{
+				name: 'Jetske',
+				img: 'jetske.jpg',
+				counter: 0
+			},
+			{
+				name: 'Mundabor',
+				img: 'mundabor.jpg',
+				counter: 0
+			},
+			{
+				name: 'Sweet',
+				img: 'sweet.jpg',
+				counter: 0
+			},
+			{
+				name: 'Cowboy Dave',
+				img: 'cowboy_dave.jpg',
+				counter: 0
+			}
+		],
+		currentCat: null
+	};
 
-	var cats = [
-		{
-			name: 'Poplinre',
-			img: 'poplinre.jpg'
+	var octopus = {
+		getCurrentCat: function() {
+			return model.currentCat;
 		},
-		{
-			name: 'Chewie',
-			img: 'chewie.jpg',
+
+		getCatNamesList: function() {
+			return model.catsList.map(function(catElement) {
+				return catElement.name;
+			});
 		},
-		{
-			name: 'Jetske',
-			img: 'jetske.jpg',
+
+		setCurrentCat: function(catsName) {
+			model.currentCat = model.catsList.find(function (catElement) {
+				return catsName == catElement.name;
+			});
+			catsViewerView.render();
 		},
-		{
-			name: 'Mundabor',
-			img: 'mundabor.jpg',
+
+		increaseCurrentCatsCounter: function() {
+			model.currentCat.counter ++;
+			catsViewerView.updateCounter();
 		},
-		{
-			name: 'Sweet',
-			img: 'sweet.jpg',
+
+		init: function() {
+			catsListView.init();
+			catsViewerView.init();
 		}
-	];
 
-	var Cat = function (catObj) {
+	};
 
-		var createViewerElement = function(cat) {
-			var att;
-			var el;
-			var viewerElement = document.createElement('div');
+	var catsListView = {
+		init: function() {
+			this.catsListItemTemplate = $('#catsListItemTemplate').html();
+			this.catsList = $('#catsList');
+			this.render();
+		},
 
-			// set element id
-			att = document.createAttribute('id');
-			att.value = cat.name;
-			viewerElement.setAttributeNode(att);
+		addCatsListItem: function(catName) {
+			var catsList = this.catsList,
+			    catsListItemTemplate = this.catsListItemTemplate;
 
-			// set element class
-			att = document.createAttribute('class');
-			att.value = 'catPicture';
-			viewerElement.setAttributeNode(att);
+			catsList.append(this.catsListItemTemplate.replace(/\{\{catName\}\}/ig, catName));
+			catsList.children(':last').click(function(e) {
+				octopus.setCurrentCat(catName);
+			});
+		},
 
-			// append img child to element
-			var img = document.createElement('img');
-			att = document.createAttribute('src');
-			att.value = 'img/' + cat.img;
-			img.setAttributeNode(att);
+		render: function() {
+			var catNamesList = octopus.getCatNamesList();
+			for (var i in catNamesList) {
+				this.addCatsListItem(catNamesList[i]);
+			}
+		}
+	};
 
-			viewerElement.appendChild(img);
-
-			// append cats name
-			var name = document.createElement('div');
-			att = document.createAttribute('class');
-			att.value = 'name';
-			name.setAttributeNode(att);
-
-			el = document.createElement('h1');
-			el.appendChild(document.createTextNode(cat.name));
-
-			name.appendChild(el);
-
-			viewerElement.appendChild(name);
-
-			// append cats counter
-			var counter = document.createElement('div');
-			att = document.createAttribute('class');
-			att.value = 'counter';
-			counter.setAttributeNode(att);
-
-			el = document.createElement('h1');
-			
-			cat.counterElement = document.createElement('span');
-			att = document.createAttribute('id');
-			att.value = cat.name + '_clickCounter'
-			cat.counterElement.setAttributeNode(att);
-			cat.counterElement.appendChild(document.createTextNode(cat.counterValue));
+	var catsViewerView = {
+		init: function() {
+			this.catsViewerTemplate = $('#catsViewerTemplate').html();
+			this.catsViewer = $('#catsViewer');
+			this.render();
+		},
 
 
-			el.appendChild(cat.counterElement);
-			el.appendChild(document.createTextNode(' Clicks'));
+		updateCounter: function() {
+			this.counter.text(octopus.getCurrentCat().counter);
+		},
 
-			counter.appendChild(el);
+		render: function() {
+			var currentCat = octopus.getCurrentCat();
+			if (currentCat == null) return;
 
-			// add element listener
-			viewerElement.addEventListener('click', (function(cat) {
-				return function() {
-					cat.counterValue ++;
-					cat.counterElement.innerText = cat.counterValue;
-				};
-			})(cat), false);
+			var catsViewerTemplate = this.catsViewerTemplate
+				.replace(/{{catName}}/ig, currentCat.name)
+				.replace(/{{catImage}}/ig, currentCat.img)
+				.replace(/{{numberOfClicks}}/ig, currentCat.counter);;
 
-			viewerElement.appendChild(counter);
+			this.catsViewer.html(catsViewerTemplate);
+			this.counter = this.catsViewer.find("#counter");
+			this.catsViewer.children('.catPicture').click(function() {
+				octopus.increaseCurrentCatsCounter();
+			});
+		}
 
-			return viewerElement;
-		};
+	};
 
-		var createListElement = function(cat) {
-			var listElement = document.createElement('li');
-			listElement.appendChild(document.createTextNode(cat.name));
-			listElement.addEventListener('click', (function(cat) {
-				return function() {
-					cat.show();
-				};
-			})(cat), false);
-
-			return listElement;
-		};
-
-
-		this.name = catObj.name;
-		this.img = catObj.img;
-		this.counterValue = 0;
-		this.viewerElement = createViewerElement(this);
-		this.listElement = createListElement(this);
-		this.show = function() {
-			document.getElementById('catsViewer').innerHTML = "";
-			document.getElementById('catsViewer').appendChild(this.viewerElement);
-		};
-
-		return {
-			addToCatsList: (function (cat) {
-				return function() {
-					document.getElementById('catsList').appendChild(cat.listElement);
-				};
-			})(this)
-		};
-	}
-
-	cats.forEach(function (cat) {
-		var catObj = new Cat(cat);
-		catObj.addToCatsList();
-	});
+	octopus.init();
 })();
