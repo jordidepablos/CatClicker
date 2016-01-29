@@ -9,17 +9,20 @@
 		<li>{{catName}}</li>
 	</script>
 	<script id="catsViewerTemplate" type="text/template">
-		<div class="name"><h1>{{catName}}</h1></div>
 		<div class="catPicture">
 			<img src="img/{{catImage}}"/>
 		</div>
-		<div class="counter"><h1><span id="counter">{{numberOfClicks}}</span> Clicks</h1></div>
+		<div class="data">
+			<div class="name"><h1>{{catName}}</h1></div>
+			<div class="counter"><h1><span id="counter">{{numberOfClicks}}</span> Clicks</h1></div>
+			<div><input id="admButton" type="button" value="Admin"/></div> 
+		</div>
 	</script>
 	<header>
 		<h1>Cat Clicker</h1>
 		<h2>Premium</h2>
 	</header>
-	<aside>
+	<aside class="left">
 		<nav>
 			<ul id="catsList"></ul>
 		</nav>
@@ -27,6 +30,15 @@
 	<section>
 		<article id="catsViewer"></article>
 	</section>
+	<aside class="right">
+		<div class="adminView">
+			<p><label for="admCatName">Cat`s name: </label><input id="admCatName" type="text" /></p>
+			<p><label for="admCatImg">Cat`s img: </label><input id="admCatImg" type="text" /></p>
+			<p><label for="admCatClicks">Cat`s clicks: </label><input id="admCatClicks" type="text" /></p>
+			<p/>
+			<p><input id="admCancelBtn" type="button" value="Cancel"/><input id="admSaveBtn" type="button" value="Save"/></p>
+		</div>
+	</aside>
 	<footer>
 		<h3>Created by <strong>Jordi de Pablos</strong></h3>
 	</footer>

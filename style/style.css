@@ -1,11 +1,18 @@
 section {
-    width: 75%;
+    width: 60%;
     margin: 0 auto;
+    float: left;
     text-align: center
 }
 
-aside {
+aside.left {
     float: left;
+    margin: 0 auto;
+    width: 15%;
+}
+
+aside.right {
+    float: right;
     margin: 0 auto;
     width: 25%;
 }
@@ -17,6 +24,7 @@ footer {
 #catsList {
     list-style-type: none;
     padding: 10px;
+    margin: 0;
 }
 
 #catsList > li {
@@ -31,12 +39,16 @@ footer {
 }
 
 
+.catPicture {
+    float: right;
+    width: 75%;
+}
+
 .catPicture > img:hover {
 	cursor: pointer;
 }
 
-.catPicture > .counter, .catPicture > .name {
-	position: relative;
-	top: -140px;
-	left: -25%;
+.data {
+	float: right;
+    width: 25%;
 }

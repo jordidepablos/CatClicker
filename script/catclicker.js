@@ -32,10 +32,12 @@
 				counter: 0
 			}
 		],
-		currentCat: null
+		currentCat: null,
+		adminViewVisible: false
 	};
 
 	var octopus = {
+
 		getCurrentCat: function() {
 			return model.currentCat;
 		},
@@ -58,9 +60,23 @@
 			catsViewerView.updateCounter();
 		},
 
+		toggleAdminView: function() {
+			model.adminViewVisible = !model.adminViewVisible;
+			adminView.render(model.adminViewVisible);
+		},
+
+		updateCurrentCat: function(name, img, counter) {
+			model.currentCat.name    = name;
+			model.currentCat.img     = img;
+			model.currentCat.counter = counter;
+			this.toggleAdminView();
+			catsViewerView.render();
+		},
+
 		init: function() {
 			catsListView.init();
 			catsViewerView.init();
+			adminView.init();
 		}
 
 	};
@@ -116,8 +132,42 @@
 			this.catsViewer.children('.catPicture').click(function() {
 				octopus.increaseCurrentCatsCounter();
 			});
+			this.catsViewer.find('#admButton').click(function () {
+				octopus.toggleAdminView();
+			});
 		}
 
+	};
+
+	var adminView = {
+		init: function() {
+			this.adminView = $('.adminView');
+			this.admName   = this.adminView.find('#admCatName');
+			this.admImg    = this.adminView.find('#admCatImg');
+			this.admClicks = this.adminView.find('#admCatClicks');
+			this.adminView.find('#admCancelBtn').click(function() {
+				octopus.toggleAdminView();
+			});
+			this.adminView.find('#admSaveBtn').click( (function(data) {
+				return function() {
+					octopus.updateCurrentCat(data.admName.val(), data.admImg.val(), data.admClicks.val());
+				};
+			})(this) );
+			this.render(false);
+		},
+
+		render: function(visibility) {
+			if (visibility) {
+				currentCat = octopus.getCurrentCat();
+				this.admName.val(currentCat.name);
+				this.admImg.val(currentCat.img);
+				this.admClicks.val(currentCat.counter);
+				this.adminView.show();
+			}
+			else {
+				this.adminView.hide();
+			}
+		}
 	};
 
 	octopus.init();
